@@ -1,0 +1,64 @@
+<script>
+    function sortNum (a, b) {
+        return b[1] - a[1];
+    }
+    
+    let _largestCountries = [];
+    let _mostPopulation = [];
+
+    fetch(`https://restcountries.com/v3.1/all`)
+        .then(function(response) {
+            return response.json();
+        })
+        .then(function(json){
+            json.forEach(element => {
+                let _languages;
+                _largestCountries.sort(sortNum);
+                _mostPopulation.sort(sortNum);
+                let _name = element.name.common
+
+                if(typeof element.languages != `undefined`){
+                    _languages = Object.values(element.languages);
+                }else{
+                    _languages = `none`;
+                }
+                console.log(`${_name} - ${element.capital} - ${element.area} - ${_languages} - ${element.population}`);
+
+                if(_largestCountries.length < 10){
+                    _largestCountries.push([_name, element.area]);
+                }else if(_largestCountries[_largestCountries.length - 1][1] < element.area){
+                    _largestCountries.pop();
+                    _largestCountries.push([_name, element.area]);
+                }
+                
+                if(_mostPopulation.length < 10){
+                    _mostPopulation.push([_name, element.population]);
+                }else if(_mostPopulation[_mostPopulation.length - 1][1] < element.population){
+                    _mostPopulation.pop();
+                    _mostPopulation.push([_name, element.population]);
+                }
+            });
+            
+        })
+        .then(() => {
+            console.log(_largestCountries);
+            console.log(_mostPopulation);
+        })
+        .catch(err => {
+            console.log(`connection failed: ${err}`);
+        } 
+        );
+
+        
+    (async () => {
+        try{
+            const res = await fetch("https://api.thecatapi.com/v1/breeds");
+            const catsJson = await res.json();
+            catsJson.forEach(element => {
+                console.log(element.name);
+            });
+        }catch(error){
+            console.error(`Error: ${error}`);
+        }
+    })();
+</script>

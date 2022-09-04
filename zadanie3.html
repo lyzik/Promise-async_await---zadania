@@ -1,0 +1,20 @@
+<script>
+    async function job(result, database, errorManager) {
+    return result
+
+    try{
+        await(function(id) {
+            return database.get(id);
+        })
+
+        await(function(info) {
+            return info.name;
+        })
+    }
+
+    catch(error) {
+        errorManager.notify(error);
+        throw error;
+    };
+}
+</script>
